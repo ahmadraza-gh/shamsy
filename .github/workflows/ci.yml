@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      E2E_ADVISER_EMAIL: adviser@ci.invalid
+      E2E_ADVISER_PASSWORD: Ci-Adviser-${{ github.run_id }}-${{ github.run_attempt }}!
+      E2E_OWNER_EMAIL: owner@ci.invalid
+      E2E_OWNER_PASSWORD: Ci-Owner-${{ github.run_id }}-${{ github.run_attempt }}!
+      ALLOW_INSECURE_AUTH_COOKIES: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Start disposable Supabase stack
+        run: npx supabase start
+      - name: Export local Supabase environment
+        shell: bash
+        run: |
+          eval "$(npx supabase status -o env)"
+          echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL" >> "$GITHUB_ENV"
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$ANON_KEY" >> "$GITHUB_ENV"
+          echo "SUPABASE_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY" >> "$GITHUB_ENV"
+      - run: npm run seed:users
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run test:db
+      - run: npm run test:integration
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: RUN_E2E=1 E2E_USE_PRODUCTION_SERVER=1 npm run test:e2e
