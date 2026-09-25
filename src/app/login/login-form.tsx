@@ -21,39 +21,33 @@ export function LoginForm({ configured }: { configured: boolean }) {
 
       <div>
         <label className="field-label" htmlFor="email">Email</label>
-        <div className="input-shell relative p-0">
-          <Mail className="absolute left-3 top-3" aria-hidden="true" size={18} />
-          <Input
-            autoComplete="email"
-            autoCapitalize="none"
-            className="border-0 pl-10"
-            id="email"
-            maxLength={254}
-            name="email"
-            placeholder="you@company.com"
-            required
-            spellCheck={false}
-            type="email"
-          />
-        </div>
+        <Input
+          autoComplete="email"
+          autoCapitalize="none"
+          id="email"
+          maxLength={254}
+          name="email"
+          placeholder="you@company.com"
+          required
+          spellCheck={false}
+          startIcon={<Mail size={18} />}
+          type="email"
+        />
       </div>
 
       <div>
         <label className="field-label" htmlFor="password">Password</label>
-        <div className="input-shell relative p-0">
-          <LockKeyhole className="absolute left-3 top-3" aria-hidden="true" size={18} />
-          <Input
-            autoComplete="current-password"
-            className="border-0 pl-10"
-            id="password"
-            maxLength={1024}
-            minLength={8}
-            name="password"
-            placeholder="Enter your password"
-            required
-            type="password"
-          />
-        </div>
+        <Input
+          autoComplete="current-password"
+          id="password"
+          maxLength={1024}
+          minLength={8}
+          name="password"
+          placeholder="Enter your password"
+          required
+          startIcon={<LockKeyhole size={18} />}
+          type="password"
+        />
       </div>
 
       {state.error ? <p className="notice notice-error" role="alert">{state.error}</p> : null}

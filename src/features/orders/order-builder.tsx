@@ -587,18 +587,17 @@ function OrderLineCard({
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           <div>
             <label className="field-label" htmlFor={`discount-${line.key}`}>Discount USD</label>
-            <div className="input-shell">
-              <span aria-hidden="true">$</span>
-              <Input
-                aria-label={`Line ${index + 1} discount USD`}
-                aria-invalid={preview.error?.startsWith("Enter the discount") || undefined}
-                className="border-0 px-0 tabular-nums"
-                id={`discount-${line.key}`}
-                inputMode="decimal"
-                onChange={(event) => onUpdate({ discountUsd: event.target.value })}
-                value={line.discountUsd}
-              />
-            </div>
+            <Input
+              type="number"
+              aria-label={`Line ${index + 1} discount USD`}
+              aria-invalid={preview.error?.startsWith("Enter the discount") || undefined}
+              className="tabular-nums"
+              id={`discount-${line.key}`}
+              inputMode="decimal"
+              onChange={(event) => onUpdate({ discountUsd: event.target.value })}
+              startIcon="$"
+              value={line.discountUsd}
+            />
           </div>
           <Metric
             label="Discount %"

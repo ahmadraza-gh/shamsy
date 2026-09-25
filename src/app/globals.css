@@ -58,6 +58,21 @@ a:focus-visible {
   outline-offset: 2px;
 }
 
+/*
+ * Form fields share one focus style. Unlayered so it beats the outline rule above.
+ * Inputs with icons draw the ring on their .input-shell wrapper instead.
+ */
+.field-input:focus-visible,
+.field-select:focus-visible,
+.input-shell:focus-within {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-amber-300) 40%, transparent);
+}
+
+.input-shell .field-input:focus-visible {
+  box-shadow: none;
+}
+
 code {
   border-radius: 0.35rem;
   background: #eef2f6;
@@ -276,13 +291,27 @@ code {
     color: #64748b;
   }
 
-  .input-shell:focus-within {
-    border-color: #48649a;
-    box-shadow: 0 0 0 3px rgb(72 100 154 / 14%);
+  .input-shell .field-input {
+    min-height: auto;
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    padding-inline: 0;
   }
 
-  .input-shell .field-input:focus-visible {
-    outline: none;
+  .input-shell {
+    background: white;
+  }
+
+  .input-shell:has(.field-input:disabled) {
+    background: #f1f5f9;
+  }
+
+  .input-icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
   }
 
   .button {
